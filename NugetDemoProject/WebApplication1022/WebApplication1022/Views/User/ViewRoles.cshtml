@@ -1,0 +1,34 @@
+﻿@model Authorization_Module_Domain.Dtos.RoleDtos.ActiveUserRole
+
+@{
+    ViewData["Title"] = "Title";
+    Layout = null;
+}
+<h1 class="h1">Assign Role</h1>
+
+<div>
+    @using (Html.BeginForm("ViewRoles", "User", FormMethod.Post,new {onsubmit="return roleSubmit(this)" }))
+    {
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-5" style=" height:79%; overflow:auto;padding-left:4%;">
+                @Html.HiddenFor(m => Model.UserId)
+                @for (int i = 0; i < Model.ActiveRoles.Count; i++)
+                {
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(model => Model.ActiveRoles[i].IsActive)
+                        @Html.DisplayFor(model => Model.ActiveRoles[i].Name)
+                    </div>
+                    @Html.HiddenFor(m => Model.ActiveRoles[i].Id)
+                    @Html.HiddenFor(m => Model.ActiveRoles[i].Name)
+                }
+            </div>
+        </div>
+        <div class="row">
+            <input type="submit" value="Submit" class="btn btn-primary" style="margin-left: 43%" />
+        </div>
+    }
+</div>
+
+
+

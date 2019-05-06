@@ -1,0 +1,151 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="h2 pull-left">Roles</h2>
+        <a class="btn btn-info pull-right" onclick="PopupForm('@Url.Action("Insert","Role")','Add or Edit')"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Role</a>
+    </div>
+</div>
+<br />
+<div class="row list-inline">
+    <div class="col-md-6 pull-right">
+        <button class="btn" onclick="refreshGrid()" style="width:100%"><i class="fa fa-refresh"></i>&nbsp;&nbsp;Refresh</button>
+    </div>
+</div>
+<table id="roleTable" class="ui celled table " style="width:100%;">
+    <thead>
+        <tr>
+            <th>
+                Action
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                CreationTime
+            </th>
+        </tr>
+    </thead>
+</table>
+@section scripts{
+    <script>
+        function LoadTree(data) {
+                var a = $('#container');
+                $('#container').jstree({
+                    'core': {
+                        'data': {
+                            "url": '@Url.Action("GetTree", "Tree")?id=' + data,
+                            "dataType": "json"
+                        }
+                    },
+                    "plugins": ["checkbox"]
+                });
+            }
+    var dataTable;
+        $(document).ready(function () {
+        dataTable = $("#roleTable").dataTable({
+            "ajax": {
+                "url": 'Role/GetRoles',
+                "type": "POST",
+                "data": "json"
+            },
+            "columns": [
+                {
+                    "data": "id", "name": "Id", "render": function (data) {
+                        return "<div class='btn-group'><button type='button' class='btn btn-primary'><i class='fa fa-cog'></i>&nbsp;&nbsp;Action</button><button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'><span class='fa fa-angle-down'></span></button><ul class='dropdown-menu' role='menu'><li><a href='#' onclick=PopupForm('@Url.Action("Insert", "Role")?id=" + data + "','Add')><i class='fa fa-pencil'></i>&nbsp;&nbsp;Edit</a></li><li><a href='#' onclick='return DeleteData(" + data + ");'><i class='fa fa-trash'></i>&nbsp;&nbsp;Delete</a></li></ul></div>";
+                    }, "width": "15%", "orderable": false
+                },
+                { "data": "name", "name": "Name", "autoWidth": true },
+                {
+                    "data": "creationTime", "name": "CreationTime", "autoWidth": true, "render": function (data) {
+                        return data.substring(0, 10);
+                    }},
+            ],
+            "serverSide": "true",
+            "order": [0, "asc"],
+            "filter": "true",
+            "processing": "true",
+            "language": {
+                "processing": "processing... please wait",
+                "search": '<i class="fa fa-search"></i>',
+                "searchPlaceholder": "Name..",
+            }
+        });
+        });
+        function DeleteData(data) {
+            if (confirm("Are you sure you want to delete ...?")) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("Delete", "Role")?id=' + data,
+                            success: function (x) {
+                                if (x.success) {
+                                    dataTable.api().ajax.reload();
+                                    $.notify(x.message, {
+                                        globalPosition: 'top center',
+                                        className: 'success',
+                                    });
+                                }
+                            },
+                            error: function (e) {
+                                $.notify(e.statusText, {
+                                    globalPosition: 'top center',
+                                    className: 'error',
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        return false;
+            }
+            return false;
+        }
+        function submitForm(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()){
+                var a = $(form).serializeFormJSON();
+                var sw = $("#container").jstree("get_selected");
+                if (sw.length == 0) {
+                    a.Permissions = [];
+                }
+                else if (typeof (sw[0]) === 'string') {
+                    a.Permissions = [];
+                    for (var i = 0; i < sw.length; i++) {
+                        var permission = {
+                            "name": sw[i]
+                        }
+                        a.Permissions.push(permission);
+                    }
+                }
+                $.ajax({
+                    type: "POST",
+                    url: (a.Id == 0) ? '@Url.Action("Create", "Role")' : '@Url.Action("Update", "Role")',
+                    data: JSON.stringify(a),
+                    contentType: 'application/json',
+                    success: function (e) {
+                        popup.dialog('close');
+                        dataTable.api().ajax.reload();
+                        $.notify(e.message, {
+                            globalPosition: 'top center',
+                            className: 'success',
+                        });
+
+                    },
+                    error: function (e) {
+                        popup.dialog('close');
+                        dataTable.api().ajax.reload();
+                        $.notify(e.statusText, {
+                            globalPosition: 'top center',
+                            className: 'error',
+                        });
+                    }
+                });
+            }
+            return false;
+        }
+
+        function refreshGrid() {
+            dataTable.api().ajax.reload();
+        }
+    </script>
+}

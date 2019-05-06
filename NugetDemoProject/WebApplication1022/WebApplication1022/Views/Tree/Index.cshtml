@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+<h2>Tree</h2>
+<div id="container"></div>
+@section scripts{
+    <script>
+        $(function () {
+            $('#container').jstree({
+                'core': {
+                    'data': {
+                        "url": '@Url.Action("GetTree","Tree")',
+                        "dataType": "json"
+                    }
+                },
+                "plugins": ["checkbox"]
+            });
+            $('#container').on("changed.jstree", function (e, data) {
+                console.log("The selected nodes are:");
+                console.log(data.selected);
+            });
+        });
+    </script>
+}

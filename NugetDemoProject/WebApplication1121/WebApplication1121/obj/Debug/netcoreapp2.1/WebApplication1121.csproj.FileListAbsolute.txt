@@ -1,0 +1,14 @@
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\bin\Debug\netcoreapp2.1\WebApplication1121.deps.json
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\bin\Debug\netcoreapp2.1\WebApplication1121.runtimeconfig.json
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\bin\Debug\netcoreapp2.1\WebApplication1121.runtimeconfig.dev.json
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\bin\Debug\netcoreapp2.1\WebApplication1121.dll
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.csprojAssemblyReference.cache
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.csproj.CoreCompileInputs.cache
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.RazorAssemblyInfo.cache
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.RazorAssemblyInfo.cs
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.AssemblyInfoInputs.cache
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.AssemblyInfo.cs
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.RazorTargetAssemblyInfo.cache
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\bin\Debug\netcoreapp2.1\WebApplication1121.pdb
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.dll
+E:\NugetDemoProject\WebApplication1121\WebApplication1121\obj\Debug\netcoreapp2.1\WebApplication1121.pdb

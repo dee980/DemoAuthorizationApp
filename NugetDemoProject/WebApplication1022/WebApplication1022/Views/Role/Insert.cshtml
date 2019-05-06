@@ -1,0 +1,41 @@
+﻿@model Authorization_Module_Domain.Dtos.RoleDtos.RoleDto
+@using System.Web
+
+@{
+    ViewData["Title"] = "Insert";
+    Layout = null;
+}
+<form onsubmit="return submitForm(this)" method="post">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#firstTab">User Detail</a></li>
+        <li><a data-toggle="tab" href="#secondTab" onclick="LoadTree(@Model.Id)">Permissions</a></li>
+    </ul>
+    <div class="tab-content" style="height:345px;overflow-x:hidden">
+
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => Model.Id)
+
+        <div id="firstTab" class="tab-pane fade in active">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Name, new { @class = "control-label" })
+                        @Html.EditorFor(e => e.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(e => e.Name)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="secondTab" class="tab-pane fade">
+            <div id="container">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-8 col-md-4">
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+

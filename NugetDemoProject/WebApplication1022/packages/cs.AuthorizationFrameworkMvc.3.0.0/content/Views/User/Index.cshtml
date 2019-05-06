@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "UserRole";
+}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="h2 pull-left">UserRole</h2>
+        <a class="btn btn-info pull-right" onclick="PopupForm('@Url.Action("Insert","User")','Add User')"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add User</a>
+    </div>
+</div>
+<div class="row list-inline">
+    <div class="col-md-4 pull-right">
+        <button class="btn" style="width:100%" onclick="Refresh()"><i class="fa fa-refresh"></i>&nbsp;&nbsp;Refresh</button>
+    </div>
+</div>
+<table id="userTable" class="ui celled table ">
+    <thead>
+        <tr>
+            <th>
+                Action
+            </th>
+            <th>
+                UserName
+            </th>
+            <th>
+                CreationTime
+            </th>
+        </tr>
+    </thead>
+    <tfoot></tfoot>
+</table>
+
+@section scripts{
+    <script>
+                var popup, datatable;
+                $(document).ready(function () {
+                    datatable= $("#userTable").dataTable({
+                        "ajax": {
+                            "url": "User/GetUser",
+                            "type": "POST",
+                            "data": "json"
+                        },
+                        "columns": [
+                            {
+                                "data": "id", "name": "Id", "render": function (data) {
+                                    return "<div class='btn-group'><button type='button' class='btn btn-primary'><i class='fa fa-cog'></i>&nbsp;&nbsp;Action</button><button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'><span class='fa fa-angle-down'></span></button><ul class='dropdown-menu' role='menu'><li><a href='#' onclick=PopupForm('@Url.Action("ViewRoles", "User")?id=" + data + "','Edit')><i class='fa fa-eye'></i>&nbsp;&nbsp;ViewRoles</a></li><li><a href='#' onclick='return DeleteData(" + data + ");'><i class='fa fa-trash'></i>&nbsp;&nbsp;Delete</a></li></ul></div>";
+                                }, "width":"15%", "orderable": false
+                            },
+                            { "data": "userName", "name": "UserName", "autoWidth": true},
+                            {
+                                "data": "creationTime", "name": "CreationTime", "autoWidth": true, "render":
+                                    function (data) {
+                                        return data.substring(0, 10);
+                                    }
+                            }
+                        ],
+                        "serverSide": "true",
+                        "order": [0, "asc"],
+                        "filter": "true",
+                        "processing": "true",
+                        "language": {
+                            "processing": "processing... please wait",
+                            "search": '<i class="fa fa-search"></i>',
+                            "searchPlaceholder": "UserName..",
+                        }
+                    });
+        });
+
+        function PopupForm(url, title) {
+                    var formDiv = $('<div/>');
+                    $.get(url)
+                        .done(function (response) {
+                            formDiv[0].innerHTML = response;
+                            popup = formDiv.dialog({
+                                autoOpen: true,
+                                resizable: false,
+                                title: title,
+                                height: 500,
+                                width: 700,
+                                modal: true,
+                                close: function () {
+                                    popup.dialog('destroy').remove();
+                                }
+                            });
+                        })
+                        .fail(function(e) {
+                            $.notify(e.statusText, {
+                                globalPosition: 'top center',
+                                className: 'error'
+                            });
+                        });
+        }
+
+                function DeleteData(data) {
+                    if (confirm("Are you sure you want to delete ...?")) {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("Delete", "User")?id=' + data,
+                            success: function (data) {
+                                if (data.success) {
+                                    datatable.api().ajax.reload();
+                                    $.notify(data.message, {
+                                        globalPosition: 'top center',
+                                        className: 'success',
+                                    })
+                                }
+                            },
+                            error: function (e) {
+                                $.notify(e.statusText, {
+                                    globalPosition: 'top center',
+                                    className: 'error',
+                                })
+                                datatable.api().ajax.reload();
+                            }
+                        });
+                    }
+                    else {
+                        return false;
+                    }
+        }
+        function formSubmit(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                debugger;
+                var a = $(form).serializeFormJSON();
+                a = JSON.stringify(a);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Insert", "User")',
+                    data: a,
+                    contentType: 'application/json',
+                    success: function (e) {
+                        popup.dialog('close');
+                        datatable.api().ajax.reload();
+                        $.notify(e.message, {
+                            globalPosition: 'top center',
+                            className: 'success',
+                        })
+                    },
+                    error: function (e) {
+                        popup.dialog('close');
+                        datatable.api().ajax.reload();
+                        $.notify(e.statusText, {
+                            globalPosition: 'top center',
+                            className: 'error',
+                        });
+                    }
+                });
+            }
+            return false;
+        }
+
+        function roleSubmit(form) {
+            $.validator.unobtrusive.parse(form);
+            if ($(form).valid()) {
+                var a = $(form).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: form.action,
+                    data: a,
+                    success: function (e) {
+                        popup.dialog('close');
+                        datatable.api().ajax.reload();
+                        $.notify(e.message, {
+                            globalPosition: 'top center',
+                            className: 'success',
+                        });
+                    },
+                    error: function (e) {
+                        $.notify(e.statusText, {
+                            globalPosition: 'top center',
+                            className: 'error',
+                        });
+                        datatable.api().ajax.reload();
+                    }
+                });
+            }
+            return false;
+        }
+        function Refresh() {
+            datatable.api().ajax.reload();
+        }
+    </script>
+}
